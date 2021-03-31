@@ -7,10 +7,15 @@ print('Hello World')
 
 # Example with Microsoft
 
+# Create a csv with the info rather that uploading it each time because we have limited access to the API before getting
+# blocked.
+# msft = yf.Ticker("MSFT")
+# df_msft = msft.history(period="6mo")
+# df_msft.to_csv('MSFT.csv')
 
-msft = yf.Ticker("MSFT")
-df_msft = msft.history(period="6mo")
-df_msft.to_csv('MSFT.csv')
+df_msft = pd.read_csv('MSFT.csv')
+df_msft.fillna(method="ffill", inplace=True)
+df_msft.fillna(method="bfill", inplace=True)
 print(df_msft)
 rm_msft = df_msft['Open'].rolling(5).mean()
 rstd_msft = df_msft['Open'].rolling(5).std()
@@ -26,7 +31,7 @@ ax[0].plot((rm_msft+2*rstd_msft),label = 'mean+2std')
 ax[0].grid(True)
 ax[0].legend(loc = 'lower right')
 ax[0].tick_params('x', labelrotation=30)
-ax[0].set_title('Stock Price Variation')
+ax[0].set_title('Stock Price Variation with Bollinger Bands')
 
 ax[1].plot(daily_returns, label = 'daily_returns')
 ax[1].tick_params('x', labelrotation=30)
